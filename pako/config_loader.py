@@ -21,9 +21,10 @@
 # under the License.
 import appdirs
 import json
+import tempfile
 from logging import getLogger
-from os import makedirs
-from os.path import join, isfile
+from os.path import join, isfile, isdir, dirname
+from subprocess import call
 
 
 def recursive_merge(a, b):
@@ -40,21 +41,36 @@ def recursive_merge(a, b):
             yield k, b[k]
 
 
-def load_package_managers_overrides() -> dict:
-    """Load the optional package manager data overrides from disk"""
-    pako_config = appdirs.user_config_dir('pako')
-    config_file = join(pako_config, 'pako.conf')
-    makedirs(pako_config, exist_ok=True)
+def get_config_filename():
+    return join(appdirs.site_config_dir('pako'), 'pako.conf')
 
+
+def try_write_empty_config_stub():
+    config_file = get_config_filename()
     if not isfile(config_file):
         from pako.package_manager_data import get_package_manager_names
-        with open(config_file, 'w') as f:
-            json.dump({i: {} for i in get_package_manager_names()}, f)
+
+        config_dir = dirname(config_file)
+        if not isdir(config_dir):
+            call(['sudo', 'mkdir', config_dir])
+
+        fd, path = tempfile.mkstemp()
+        with open(fd, 'w') as temp:
+            json.dump({
+                **{i: {} for i in get_package_manager_names()},
+                '__order__': []
+            }, temp, indent=4)
+        call(['sudo', 'mv', path, config_file])
+
+
+def load_package_managers_overrides() -> dict:
+    """Load the optional package manager data overrides from disk"""
+    config_file = get_config_filename()
     try:
         with open(config_file) as f:
-            custom_config = json.load(f)
+            return json.load(f)
     except ValueError:
         getLogger(__name__).warning('Failed to load config file')
-        custom_config = {}
-
-    return custom_config
+        return {}
+    except OSError:
+        return {}

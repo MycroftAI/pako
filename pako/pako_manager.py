@@ -25,6 +25,7 @@ from os.path import basename
 from shutil import which
 from subprocess import call, PIPE
 
+from pako.config_loader import try_write_empty_config_stub
 from pako.package_format import PackageFormat
 from pako.package_manager_data import load_package_manager_data
 
@@ -58,13 +59,15 @@ class PakoManager:
         if self.config['sudo']:
             sudo_args = ['sudo']
             if not self.has_sudo:
-                if self._check_for_sudo():
-                    self.has_sudo = True
-                else:
+                if not self._check_for_sudo():
                     print('Requesting sudo to run command: {}...'.format(
                         ' '.join([basename(self.exe)] + args)
                     ))
-        return call(sudo_args + [self.exe] + args)
+        status = call(sudo_args + [self.exe] + args)
+        self.has_sudo = self.config['sudo']
+        if self.has_sudo:
+            try_write_empty_config_stub()
+        return status
 
     def update(self):
         return self.call(self.config['update'].split()) == 0
