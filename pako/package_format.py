@@ -31,8 +31,9 @@ class PackageFormat:
     lib = 'lib'
     lib_dev = 'lib-dev'
     lib_debug = 'lib-debug'
+    none = 'none'  # no special formatting
 
-    all = [exe, lib, lib_dev, lib_debug]
+    all = [exe, lib, lib_dev, lib_debug, none]
 
     @classmethod
     def parse(cls, package_string: str) -> Tuple[str, str]:

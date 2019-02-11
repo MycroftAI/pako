@@ -44,7 +44,8 @@ from pako import PakoManager, PackageFormat
 
 manager = PakoManager()
 manager.update()
-manager.install('gdbm', PackageFormat.lib_dev)
+manager.install(['gdbm-dev', 'sdl2-dev'])
+manager.install(['ssl-dev'], overrides={'eopkg': ['openssl-devel']})
 ```
 
 ## Help Wanted

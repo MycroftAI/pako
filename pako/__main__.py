@@ -25,7 +25,7 @@ from pako.pako_manager import PakoManager
 
 
 def install(args):
-    return PakoManager().install(args.package, args.type)
+    return PakoManager().install(args.packages)
 
 
 def update(args):
@@ -36,8 +36,7 @@ def main():
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(dest='action')
     p = subparsers.add_parser('install')
-    p.add_argument('package')
-    p.add_argument('--type', '-t')
+    p.add_argument('packages', nargs='+')
     subparsers.add_parser('update')
     args = parser.parse_args()
     try:
