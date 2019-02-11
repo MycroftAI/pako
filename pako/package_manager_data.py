@@ -19,9 +19,12 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+from collections import OrderedDict
+
 from pako.config_loader import recursive_merge, load_package_managers_overrides
 
 __package_managers = {
+    '__order__': ['eopkg', 'apt-get'],
     'eopkg': {
         'sudo': True,
         'update': 'ur',
@@ -52,4 +55,11 @@ def get_package_manager_names():
 
 
 def load_package_manager_data():
-    return dict(recursive_merge(__package_managers, load_package_managers_overrides()))
+    a = __package_managers
+    b = load_package_managers_overrides()
+    order = []
+    order += [i for i in b.pop('__order__', []) if i not in order]
+    order += [i for i in a.pop('__order__', []) if i not in order]
+    data = dict(recursive_merge(a, b))
+    order += [i for i in data if i not in order]
+    return OrderedDict((k, data[k]) for k in order)
