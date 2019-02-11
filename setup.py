@@ -23,7 +23,7 @@ from setuptools import setup
 
 setup(
     name='pako',
-    version='0.2.0',
+    version='0.2.1',
     packages=['pako'],
     install_requires=['appdirs'],
     url='https://github.com/MycroftAI/pako',
