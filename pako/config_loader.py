@@ -57,7 +57,7 @@ def try_write_empty_config_stub():
         fd, path = tempfile.mkstemp()
         with open(fd, 'w') as temp:
             base = {i: {} for i in get_package_manager_names()}
-            base['__order__']: []
+            base['__order__'] = []
             json.dump(base, temp, indent=4)
         call(['sudo', 'mv', path, config_file])
 
