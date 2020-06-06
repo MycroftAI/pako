@@ -46,6 +46,28 @@ __package_managers = {
             'lib-dev': ['lib{}-dev', '{}-dev'],
             'lib-debug': ['lib{}-dbg', '{}-dbg']
         }
+    },
+    'dnf': {
+        'sudo': True,
+        'update': 'check-update',
+        'install': 'install -y',
+        'formats': {
+            'exe': ['{}', '{}-utils'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel', 'lib{}-devel'],
+            'lib-debug': ['{}-debuginfo', 'lib{}-debuginfo'],
+        }
+    },
+    'rpm-ostree': {
+        'sudo': False,
+        'update': 'refresh-md',
+        'install': 'install',
+        'formats': {
+            'exe': ['{}', '{}-utils'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel', 'lib{}-devel'],
+            'lib-debug': ['{}-debuginfo', 'lib{}-debuginfo'],
+        }
     }
 }
 
