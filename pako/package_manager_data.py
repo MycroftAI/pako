@@ -24,7 +24,7 @@ from collections import OrderedDict
 from pako.config_loader import recursive_merge, load_package_managers_overrides
 
 __package_managers = {
-    '__order__': ['eopkg', 'apt-get'],
+    '__order__': ['eopkg', 'apt-get', 'rpm-ostree', 'dnf'],
     'eopkg': {
         'sudo': True,
         'update': 'ur',
@@ -45,6 +45,28 @@ __package_managers = {
             'lib': ['lib{}', '{}'],
             'lib-dev': ['lib{}-dev', '{}-dev'],
             'lib-debug': ['lib{}-dbg', '{}-dbg']
+        }
+    },
+    'rpm-ostree': {
+        'sudo': False,
+        'update': 'refresh-md',
+        'install': 'install',
+        'formats': {
+            'exe': ['{}', '{}-utils'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel', 'lib{}-devel'],
+            'lib-debug': ['{}-debuginfo', 'lib{}-debuginfo'],
+        }
+    },
+    'dnf': {
+        'sudo': True,
+        'update': 'check-update',
+        'install': 'install -y',
+        'formats': {
+            'exe': ['{}', '{}-utils'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel', 'lib{}-devel'],
+            'lib-debug': ['{}-debuginfo', 'lib{}-debuginfo'],
         }
     }
 }
