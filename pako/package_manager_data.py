@@ -24,7 +24,7 @@ from collections import OrderedDict
 from pako.config_loader import recursive_merge, load_package_managers_overrides
 
 __package_managers = {
-    '__order__': ['eopkg', 'apt-get', 'rpm-ostree', 'dnf'],
+    '__order__': ['eopkg', 'apt-get', 'rpm-ostree', 'dnf', 'pacman', 'yum', 'zypper'],
     'eopkg': {
         'sudo': True,
         'update': 'ur',
@@ -39,7 +39,7 @@ __package_managers = {
     'apt-get': {
         'sudo': True,
         'update': 'update',
-        'install': 'install',
+        'install': 'install -y',
         'formats': {
             'exe': ['{}', '{}-utils'],
             'lib': ['lib{}', '{}'],
@@ -67,6 +67,39 @@ __package_managers = {
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
             'lib-dev': ['{}-devel', 'lib{}-devel'],
             'lib-debug': ['{}-debuginfo', 'lib{}-debuginfo'],
+        }
+    },
+    'pacman': {
+        'sudo': True,
+        'update': 'Syu --needed --noconfirm',
+        'install': 'Sy --needed --noconfirm',
+        'formats': {
+            'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': [''],
+            'lib-debug': ['{}-debug'],
+        }
+    },
+    'yum': {
+        'sudo': True,
+        'update': 'update -y',
+        'install': 'install -y',
+        'formats': {
+            'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel'],
+            'lib-debug': ['{}-debug','{}-dbg'],
+        }
+    },
+    'zypper': {
+        'sudo': True,
+        'update': 'update -y',
+        'install': 'install -y',
+        'formats': {
+            'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
+            'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
+            'lib-dev': ['{}-devel'],
+            'lib-debug': ['{}-debug','{}-dbg'],
         }
     }
 }
