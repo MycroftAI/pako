@@ -71,7 +71,7 @@ __package_managers = {
     },
     'pacman': {
         'sudo': True,
-        'update': 'Syu --needed --noconfirm',
+        'update': 'Syu --noconfirm',
         'install': 'Sy --needed --noconfirm',
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
