@@ -28,7 +28,7 @@ __package_managers = {
     'eopkg': {
         'sudo': True,
         'update': 'ur',
-        'install': 'it -y',
+        'install': 'it',
         'formats': {
             'exe': ['{}', '{}-utils', '{}-bin'],
             'lib': ['{}', 'lib{}'],
@@ -39,7 +39,7 @@ __package_managers = {
     'apt-get': {
         'sudo': True,
         'update': 'update',
-        'install': 'install -y',
+        'install': 'install',
         'formats': {
             'exe': ['{}', '{}-utils'],
             'lib': ['lib{}', '{}'],
@@ -61,7 +61,7 @@ __package_managers = {
     'dnf': {
         'sudo': True,
         'update': 'check-update',
-        'install': 'install -y',
+        'install': 'install',
         'formats': {
             'exe': ['{}', '{}-utils'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
@@ -71,8 +71,8 @@ __package_managers = {
     },
     'pacman': {
         'sudo': True,
-        'update': 'Syu --noconfirm',
-        'install': 'Sy --needed --noconfirm',
+        'update': 'Syu',
+        'install': 'Sy',
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
@@ -82,8 +82,8 @@ __package_managers = {
     },
     'yum': {
         'sudo': True,
-        'update': 'update -y',
-        'install': 'install -y',
+        'update': 'update',
+        'install': 'install',
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
@@ -93,8 +93,8 @@ __package_managers = {
     },
     'zypper': {
         'sudo': True,
-        'update': 'update -y',
-        'install': 'install -y',
+        'update': 'update',
+        'install': 'install',
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
