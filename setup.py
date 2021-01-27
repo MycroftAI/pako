@@ -26,7 +26,7 @@ with open('README.md', 'r') as fh:
 
 setup(
     name='pako',
-    version='0.2.3',
+    version='0.3.0',
     packages=['pako'],
     install_requires=['appdirs'],
     url='https://github.com/MycroftAI/pako',
