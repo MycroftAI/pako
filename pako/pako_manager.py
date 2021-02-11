@@ -70,9 +70,21 @@ class PakoManager:
 
     def update(self):
         return self.call(self.config['update'].split()) == 0
-    
 
-    def install_one(self, package: str, fmt: str = None) -> bool:
+    def action(self, action: str, packages: list, overrides: dict = None) -> bool:
+        if isinstance(packages, str):  # Easy mistake
+            raise TypeError('Packages parameter must be a list')
+        overrides = overrides or {}
+        if self.name in overrides:
+            packages = overrides[self.name]
+            return self.call(self.config[action].split() + packages) == 0
+        for package in packages:
+            action_one = action+"one"
+            if not self.action_one(action,package):
+                return False
+        return True
+
+    def action_one(self, action: str, package: str, fmt: str = None) -> bool:
         if not fmt:
             package, fmt = PackageFormat.parse(package)
         if fmt not in PackageFormat.all:
@@ -88,50 +100,18 @@ class PakoManager:
                         possible_names.append(f)
 
         for name in possible_names:
-            if self.call(self.config['install'].split() + [name.format(package)]) == 0:
+            if self.call(self.config[action].split() + [name.format(package)]) == 0:
                 return True
         return False
+        
+    def install_one(self, package: str, fmt: str = None) -> bool:
+        PakoManager.action_one(self,"install",package,fmt=None)
     
     def uninstall_one(self, package: str, fmt: str = None) -> bool:
-        if not fmt:
-            package, fmt = PackageFormat.parse(package)
-        if fmt not in PackageFormat.all:
-            raise ValueError('Invalid package format: {}. Should be one of: {}'.format(
-                fmt, PackageFormat.all
-            ))
-
-        possible_names = []
-        for format_name, formats in self.config['formats'].items():
-            if not fmt or format_name == fmt:
-                for f in formats:
-                    if f not in possible_names:
-                        possible_names.append(f)
-
-        for name in possible_names:
-            if self.call(self.config['uninstall'].split() + [name.format(package)]) == 0:
-                return True
-        return False
+        PakoManager.action_one(self,"uninstall",package,fmt=None)
 
     def install(self, packages: list, overrides: dict = None) -> bool:
-        if isinstance(packages, str):  # Easy mistake
-            raise TypeError('Packages parameter must be a list')
-        overrides = overrides or {}
-        if self.name in overrides:
-            packages = overrides[self.name]
-            return self.call(self.config['install'].split() + packages) == 0
-        for package in packages:
-            if not self.install_one(package):
-                return False
-        return True
+       PakoManager.action(self,"install",packages,overrides) 
 
     def uninstall(self, packages: list, overrides: dict = None) -> bool:
-        if isinstance(packages, str):  # Easy mistake
-            raise TypeError('Packages parameter must be a list')
-        overrides = overrides or {}
-        if self.name in overrides:
-            packages = overrides[self.name]
-            return self.call(self.config['uninstall'].split() + packages) == 0
-        for package in packages:
-            if not self.uninstall_one(package):
-                return False
-        return True
+        PakoManager.action(self,"uninstall",packages,overrides)

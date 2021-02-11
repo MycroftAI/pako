@@ -47,6 +47,7 @@ def main():
         if result:
             print('{} succeeded'.format(args.action.title()))
             exit(0)
+            
         else:
             print('{} failed'.format(args.action.title()))
             exit(1)
