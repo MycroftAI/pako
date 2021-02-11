@@ -24,7 +24,7 @@ from collections import OrderedDict
 from pako.config_loader import recursive_merge, load_package_managers_overrides
 
 __package_managers = {
-    '__order__': ['eopkg', 'apt-get', 'rpm-ostree', 'dnf', 'pacman', 'yum', 'zypper', 'apk'],
+    '__order__': ['eopkg', 'apt-get', 'rpm-ostree', 'dnf', 'pacman', 'yum', 'zypper', 'apk', 'brew'],
     'eopkg': {
         'sudo': True,
         'update': 'ur',
@@ -34,6 +34,19 @@ __package_managers = {
             'lib': ['{}', 'lib{}'],
             'lib-dev': ['{}-devel', 'lib{}-devel'],
             'lib-debug': ['{}-dbginfo', 'lib{}-dbginfo'],
+        }
+    },
+    'brew': {
+        'sudo': False,
+        'update': 'update',
+        'install': 'install',
+        'doctor': "doctor",
+        'uninstall': "remove",
+        'formats': {
+            'exe': ["{}"],
+            'lib': ['lib{}', '{}'],
+            'lib-dev': ['lib{}-dev', '{}-dev'],
+            'lib-debug': ['lib{}-dbg', '{}-dbg']
         }
     },
     'apt-get': {

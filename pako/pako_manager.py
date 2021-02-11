@@ -35,9 +35,8 @@ class PakoManager:
         self.has_sudo = False
         self.all_data = load_package_manager_data()
         self.name = self._find_package_manager(list(self.all_data))
-
         if not self.name:
-            raise RuntimeError('Package manager not found!')
+            raise RuntimeError('Packagen manager not found!')
 
         self.exe = which(self.name)
         self.config = self.all_data[self.name]
@@ -72,7 +71,20 @@ class PakoManager:
     def update(self):
         return self.call(self.config['update'].split()) == 0
 
-    def install_one(self, package: str, fmt: str = None) -> bool:
+    def action(self, action: str, packages: list, overrides: dict = None) -> bool:
+        if isinstance(packages, str):  # Easy mistake
+            raise TypeError('Packages parameter must be a list')
+        overrides = overrides or {}
+        if self.name in overrides:
+            packages = overrides[self.name]
+            return self.call(self.config[action].split() + packages) == 0
+        for package in packages:
+            action_one = action+"one"
+            if not self.action_one(action,package):
+                return False
+        return True
+
+    def action_one(self, action: str, package: str, fmt: str = None) -> bool:
         if not fmt:
             package, fmt = PackageFormat.parse(package)
         if fmt not in PackageFormat.all:
@@ -88,18 +100,18 @@ class PakoManager:
                         possible_names.append(f)
 
         for name in possible_names:
-            if self.call(self.config['install'].split() + [name.format(package)]) == 0:
+            if self.call(self.config[action].split() + [name.format(package)]) == 0:
                 return True
         return False
+        
+    def install_one(self, package: str, fmt: str = None) -> bool:
+        PakoManager.action_one(self,"install",package,fmt=None)
+    
+    def uninstall_one(self, package: str, fmt: str = None) -> bool:
+        PakoManager.action_one(self,"uninstall",package,fmt=None)
 
     def install(self, packages: list, overrides: dict = None) -> bool:
-        if isinstance(packages, str):  # Easy mistake
-            raise TypeError('Packages parameter must be a list')
-        overrides = overrides or {}
-        if self.name in overrides:
-            packages = overrides[self.name]
-            return self.call(self.config['install'].split() + packages) == 0
-        for package in packages:
-            if not self.install_one(package):
-                return False
-        return True
+       PakoManager.action(self,"install",packages,overrides) 
+
+    def uninstall(self, packages: list, overrides: dict = None) -> bool:
+        PakoManager.action(self,"uninstall",packages,overrides)
