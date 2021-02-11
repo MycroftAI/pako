@@ -30,17 +30,20 @@ def install(args):
 
 def update(args):
     return PakoManager().update()
-
+def uninstall(args):
+    return PakoManager().uninstall(args.packages)
 
 def main():
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(dest='action')
     p = subparsers.add_parser('install')
+    q = subparsers.add_parser('uninstall')
+    q.add_argument('packages', nargs='+')
     p.add_argument('packages', nargs='+')
     subparsers.add_parser('update')
     args = parser.parse_args()
     try:
-        result = {'install': install, 'update': update}[args.action](args)
+        result = {'install': install, 'update': update, 'uninstall': uninstall}[args.action](args)
         if result:
             print('{} succeeded'.format(args.action.title()))
             exit(0)
