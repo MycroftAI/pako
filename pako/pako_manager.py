@@ -72,7 +72,7 @@ class PakoManager:
     def update(self):
         return self.call(self.config['update'].split()) == 0
 
-    def install_one(self, package: str, fmt: str = None) -> bool:
+    def install_one(self, package: str, fmt: str = None, flags: list = []) -> bool:
         if not fmt:
             package, fmt = PackageFormat.parse(package)
         if fmt not in PackageFormat.all:
@@ -87,19 +87,25 @@ class PakoManager:
                     if f not in possible_names:
                         possible_names.append(f)
 
+        install_cmd = self.config['install'].split()
+        if 'no-confirm' in flags:
+            install_cmd.append(self.config.get('flags').get('no-confirm'))
         for name in possible_names:
-            if self.call(self.config['install'].split() + [name.format(package)]) == 0:
+            if self.call(install_cmd + [name.format(package)]) == 0:
                 return True
         return False
 
-    def install(self, packages: list, overrides: dict = None) -> bool:
+    def install(self, packages: list, overrides: dict = None, flags: list = []) -> bool:
         if isinstance(packages, str):  # Easy mistake
             raise TypeError('Packages parameter must be a list')
         overrides = overrides or {}
         if self.name in overrides:
             packages = overrides[self.name]
-            return self.call(self.config['install'].split() + packages) == 0
+            install_cmd = self.config['install'].split()
+            if 'no-confirm' in flags:
+                install_cmd.append(self.config.get('flags').get('no-confirm'))
+            return self.call(install_cmd + packages) == 0
         for package in packages:
-            if not self.install_one(package):
+            if not self.install_one(package, flags=flags):
                 return False
         return True

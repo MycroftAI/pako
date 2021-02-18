@@ -29,6 +29,9 @@ __package_managers = {
         'sudo': True,
         'update': 'ur',
         'install': 'it',
+        'flags': {
+            'no-confirm': '-y',
+        },
         'formats': {
             'exe': ['{}', '{}-utils', '{}-bin'],
             'lib': ['{}', 'lib{}'],
@@ -40,6 +43,9 @@ __package_managers = {
         'sudo': True,
         'update': 'update',
         'install': 'install',
+        'flags': {
+            'no-confirm': '-y',
+        },
         'formats': {
             'exe': ['{}', '{}-utils'],
             'lib': ['lib{}', '{}'],
@@ -73,6 +79,9 @@ __package_managers = {
         'sudo': True,
         'update': 'Syu',
         'install': 'Sy',
+        'flags': {
+            'no-confirm': '--noconfirm',
+        },
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
@@ -84,6 +93,9 @@ __package_managers = {
         'sudo': True,
         'update': 'update',
         'install': 'install',
+        'flags': {
+            'no-confirm': '-y',
+        },
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
@@ -95,6 +107,9 @@ __package_managers = {
         'sudo': True,
         'update': 'update',
         'install': 'install',
+        'flags': {
+            'no-confirm': '-y',
+        },
         'formats': {
             'exe': ['{}', '{}-utils', '{}utils', '{}-bin'],
             'lib': ['{}', 'lib{}', '{}-lib', '{}-libs'],
