@@ -39,7 +39,7 @@ __package_managers = {
     'apt-get': {
         'sudo': True,
         'update': 'update',
-        'install': 'install',
+        'install': 'install -y',
         'formats': {
             'exe': ['{}', '{}-utils'],
             'lib': ['lib{}', '{}'],
