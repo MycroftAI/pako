@@ -48,6 +48,17 @@ manager.install(['gdbm-dev', 'sdl2-dev'])
 manager.install(['ssl-dev'], overrides={'eopkg': ['openssl-devel']})
 ```
 
+### Non-interactive mode
+
+A `no-confirm` flag can be added to calls. This will be translated to the equivalent command line flag such as `apt install -y`.
+
+```python
+from pako import PakoManager, PackageFormat
+
+manager = PakoManager()
+manager.install(['example-package'], flags=['no-confirm'])
+```
+
 ## Help Wanted
 
 This tool can improve to fit a lot of use cases. Feel free to create an issue or pull request for
