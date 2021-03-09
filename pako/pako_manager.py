@@ -49,12 +49,18 @@ class PakoManager:
 
     @staticmethod
     def _find_package_manager(exes):
+        """Determine which package manager exists on a system."""
         for exe in exes:
             if which(exe):
                 return exe
         return None
 
     def call(self, args: list):
+        """Execute command for the available package manager.
+        
+        Arguments:
+            args (List): list of command line arguments use
+        """
         sudo_args = []
         if self.config['sudo']:
             sudo_args = ['sudo']
@@ -70,9 +76,19 @@ class PakoManager:
         return status
 
     def update(self):
+        """Update list of available packages."""
         return self.call(self.config['update'].split()) == 0
 
-    def install_one(self, package: str, fmt: str = None) -> bool:
+    def install_one(self, package: str, fmt: str = None, flags: list = []) -> bool:
+        """Install a single system package.
+
+        Arguments:
+            package (Str): Name of package to install
+            fmt (Str): Format of package name to use
+            flags (List[Str]): A list of command flags to use if available
+        Returns:
+            Bool: True if package was successfully installed
+        """
         if not fmt:
             package, fmt = PackageFormat.parse(package)
         if fmt not in PackageFormat.all:
@@ -87,19 +103,34 @@ class PakoManager:
                     if f not in possible_names:
                         possible_names.append(f)
 
+        install_cmd = self.config['install'].split()
+        if 'no-confirm' in flags:
+            install_cmd.append(self.config.get('flags').get('no-confirm'))
         for name in possible_names:
-            if self.call(self.config['install'].split() + [name.format(package)]) == 0:
+            if self.call(install_cmd + [name.format(package)]) == 0:
                 return True
         return False
 
-    def install(self, packages: list, overrides: dict = None) -> bool:
+    def install(self, packages: list, overrides: dict = None, flags: list = []) -> bool:
+        """Install system packages.
+
+        Arguments:
+            packages (List[Str]): A list of package names to install
+            overrides (Dict): A dictionary of package name formats to use
+            flags (List[Str]): A list of command flags to use if available
+        Returns:
+            Bool: True if all packages were successfully installed
+        """
         if isinstance(packages, str):  # Easy mistake
             raise TypeError('Packages parameter must be a list')
         overrides = overrides or {}
         if self.name in overrides:
             packages = overrides[self.name]
-            return self.call(self.config['install'].split() + packages) == 0
+            install_cmd = self.config['install'].split()
+            if 'no-confirm' in flags:
+                install_cmd.append(self.config.get('flags').get('no-confirm'))
+            return self.call(install_cmd + packages) == 0
         for package in packages:
-            if not self.install_one(package):
+            if not self.install_one(package, flags=flags):
                 return False
         return True

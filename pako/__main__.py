@@ -24,8 +24,8 @@ from argparse import ArgumentParser
 from pako.pako_manager import PakoManager
 
 
-def install(args):
-    return PakoManager().install(args.packages)
+def install(*args, **kwargs):
+    return PakoManager().install(*args, **kwargs)
 
 
 def update(args):
