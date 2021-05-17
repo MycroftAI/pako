@@ -45,7 +45,10 @@ class PakoManager:
             raise RuntimeError('Sudo required (and script not launched interactively)')
 
     def _check_for_sudo(self):
-        return call(['sudo', '-n', 'true'], stderr=PIPE) == 0
+        try:
+            return call(['sudo', '-n', 'true'], stderr=PIPE) == 0
+        except:
+            return False
 
     @staticmethod
     def _find_package_manager(exes):
